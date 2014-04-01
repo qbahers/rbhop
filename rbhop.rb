@@ -2,30 +2,35 @@
 ## States and goals
 
 class State
-  # A state is just a collection of variable bindings.
   attr_accessor :name
 
-  def initialize(name)
-    self.name = name
+  def deep_clone
+    Marshal::load(Marshal.dump(self))
   end
 end
 
 class Goal
-  # A goal is just a collection of variable bindings.
   attr_accessor :name
-
-  def initialize(name)
-    self.name = name
-  end
 end
 
 ### print_state and print_goal are identical except for the name
 
-def print_state(state)
+def print_state(state, indent=4)
   if state != false
     state.instance_variables.map do |var|
-      puts "var :#{var}"
-      puts "#{state.name}.#{var} = #{state.instance_variable_get(var)}"
+      indent.times {print ' '}
+      puts "#{var} = #{state.instance_variable_get(var)}"
+    end
+  else
+    puts "false"
+  end
+end
+
+def print_goal(state, indent=4)
+  if goal != false
+    goal.instance_variables.map do |var|
+      indent.times {print ' '}
+      puts "#{var} = #{goal.instance_variable_get(var)}"
     end
   else
     puts "false"
@@ -38,27 +43,17 @@ end
 operators = []
 methods = []
 
-def declare_operators(op_list)
-  operators = op_list
-  return operators
-end
-
-def declare_methods(task_name, method_list)
-  methods = method_list
-  return methods
-end
-
 ############################################################
 ## The actual planner
 
 def rbhop(state, tasks, verbose=0, operators, methods)
-  result = seek_plan(state, tasks, [], 0, verbose, operators, methods)
   if verbose > 0
     puts "** rbhop, verbose = #{verbose}: **"
     puts "state = #{state.name}"
     puts "tasks = #{tasks}"
-    puts "** result = #{result}"
   end
+  result = seek_plan(state, tasks, [], 0, verbose, operators, methods)
+  if verbose > 0 then puts "** result = #{result}" end
   result
 end
 
@@ -67,22 +62,15 @@ def seek_plan(state, tasks, plan, depth, verbose=0, operators, methods)
   if verbose > 1 then puts "depth #{depth} tasks #{tasks}" end
 
   if tasks == []
-    if verbose > 2
-      puts "depth #{depth} returns plan #{plan}"
-      return plan
-    end
+    if verbose > 2 then puts "depth #{depth} returns plan #{plan}" end
+    return plan
   end
 
   task1 = tasks[0]
-  puts "task1: #{task1}"
   if operators.has_key? task1[0]
-    puts "Hey"
     if verbose > 2 then puts "depth #{depth} action #{task1}" end
-    puts "operators: #{operators}"
     operator = operators[task1[0]]
-    puts "operator: #{operator}"
-    newstate = operator.call(state, *task1.drop(1))
-    puts "newstate: #{newstate}"
+    newstate = operator.call(state.deep_clone, *task1.drop(1))
 
     if verbose > 2
       puts "depth #{depth} new state: "
@@ -90,27 +78,21 @@ def seek_plan(state, tasks, plan, depth, verbose=0, operators, methods)
     end
 
     if newstate
-      puts "Yo!"
       solution = seek_plan(newstate, tasks.drop(1), plan << task1, depth + 1, verbose, operators, methods)
       unless solution == false then return solution end
     end
   end
 
   if methods.include? task1[0]
-    puts "Hey Hey"
     if verbose > 2 then puts "depth #{depth} method instance #{task1}" end
     relevant = methods.drop(1)
-    puts "relevant: #{relevant}"
     relevant.each do |method|
-      puts "task1.drop(1): #{task1.drop(1)}"
       #spat operator
       subtasks = method.call(state, *task1.drop(1))
       # ...
       if verbose > 2 then puts "depth #{depth} new tasks: #{subtasks}" end
 
       unless subtasks == false
-        puts "subtasks: #{subtasks}"
-        puts "Hej Hej: #{tasks.drop(1)}"
         solution = seek_plan(state, subtasks, plan, depth + 1, verbose, operators, methods)
 
         unless solution == false then return solution end
@@ -139,9 +121,7 @@ def walk(state, a, x, y)
 end
 
 def call_taxi(state, a, x)
-  puts "state call_taxi avant: #{state.loc}"
   state.loc["taxi"] = x
-  puts "state call_taxi apres: #{state.loc}"
   state
 end
 
@@ -193,31 +173,30 @@ puts ""
 
 class State
   attr_accessor :loc, :cash, :owe, :dist
-
 end
 
-state1 = State.new("state1")
-
-state1.loc = {"me" => "home"}
-state1.cash = {"me" => 20}
-state1.owe = {"me" => 0}
-state1.dist = {"home" => {"park" => 8}, "park" => {"home" => 8}}
+state = State.new
+state.name = "state1"
+state.loc = {"me" => "home"}
+state.cash = {"me" => 20}
+state.owe = {"me" => 0}
+state.dist = {"home" => {"park" => 8}, "park" => {"home" => 8}}
 
 puts "
 ********************************************************************************
-Call pyhop.pyhop(state1,[('travel','me','home','park')]) with different verbosity levels
+Call rbhop.rbhop(state1,[('travel','me','home','park')]) with different verbosity levels
 ********************************************************************************
 "
 
-#puts "- If verbose=0 (the default), Pyhop returns the solution but prints nothing."
-#rbhop(state1, [], verbose=3, operators)
+puts "", "- If verbose=0 (the default), Rbhop returns the solution but prints nothing."
+rbhop(state, [['travel', "me", "home", "park"]], operators, methods)
 
-#puts "- If verbose=1, Pyhop prints the problem and solution, and returns the solution:"
-#rbhop(state1,[['travel', :me, :home, :park]], verbose=1, operators)
+puts "", "- If verbose=1, Rbhop prints the problem and solution, and returns the solution:"
+rbhop(state, [["travel", "me", "home", "park"]], verbose=1, operators, methods)
 
-#puts "- If verbose=2, ...:"
-#rbhop(state1,[['travel', :me, :home, :park]], verbose=2, operators)
+puts "", "- If verbose=2, Rbhop also prints a note at each recursive call:"
+rbhop(state, [['travel', "me", "home", "park"]], verbose=2, operators, methods)
 
-puts "- If verbose=3, ..."
-rbhop(state1,[['travel', "me", "home", "park"]], verbose=3, operators, methods)
+puts "", "- If verbose=3, Rbhop also prints the intermediate states:"
+rbhop(state, [['travel', "me", "home", "park"]], verbose=3, operators, methods)
 
