@@ -41,12 +41,17 @@ end
 ## Commands to tell Pyhop what the operators and methods are
 
 operators = {}
-methods = []
+methods = {}
 
 def declare_operators(*op_list, operators)
   op_list.map do |op|
     operators[op] = method(op.to_sym)
   end
+end
+
+def declare_methods(task_name, *method_list, methods)
+  methods[task_name] = method_list.map {|m| method(m.to_sym)}
+  methods[task_name]
 end
 
 ############################################################
@@ -89,9 +94,9 @@ def seek_plan(state, tasks, plan, depth, verbose=0, operators, methods)
     end
   end
 
-  if methods.include? task1[0]
+  if methods.has_key? task1[0]
     if verbose > 2 then puts "depth #{depth} method instance #{task1}" end
-    relevant = methods.drop(1)
+    relevant = methods[task1[0]]
     relevant.each do |method|
       #spat operator
       subtasks = method.call(state, *task1.drop(1))
@@ -172,7 +177,7 @@ def travel_by_taxi(state, a, x, y)
   false
 end
 
-methods = ["travel", method(:travel_by_foot), method(:travel_by_taxi)]
+declare_methods('travel', "travel_by_foot", "travel_by_taxi", methods)
 puts ""
 #rbhop.print_methods()
 
