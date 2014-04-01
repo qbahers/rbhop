@@ -40,8 +40,14 @@ end
 ############################################################
 ## Commands to tell Pyhop what the operators and methods are
 
-operators = []
+operators = {}
 methods = []
+
+def declare_operators(*op_list, operators)
+  op_list.map do |op|
+    operators[op] = method(op.to_sym)
+  end
+end
 
 ############################################################
 ## The actual planner
@@ -146,8 +152,7 @@ def pay_driver(state, a)
   end
 end
 
-operators = {"walk" => method(:walk), "call_taxi" => method(:call_taxi), 
-             "ride_taxi" => method(:ride_taxi), "pay_driver" => method(:pay_driver)}
+declare_operators("walk", "call_taxi", "ride_taxi", "pay_driver", operators)
 puts ""
 #print_operators()
 
