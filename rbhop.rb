@@ -50,7 +50,7 @@ def print_goal(state, indent=4)
 end
 
 ############################################################
-# Commands to tell Pyhop what the operators and methods are
+# Commands to tell Rbhop what the operators and methods are
 
 module Task
   class << self
@@ -114,6 +114,7 @@ def seek_plan(state, tasks, plan, depth, verbose=0)
   if Task.methods.key? task1[0]
     puts "depth #{depth} method instance #{task1}" if verbose > 2
     relevant = Task.methods[task1[0]]
+
     relevant.each do |method|
       subtasks = method.call(state, *task1.drop(1))
       puts "depth #{depth} new tasks: #{subtasks}" if verbose > 2
