@@ -106,7 +106,7 @@ def seek_plan(state, tasks, plan, depth, verbose=0)
     end
 
     if newstate
-      solution = seek_plan(newstate, tasks.drop(1), plan << task1, depth + 1, verbose)
+      solution = seek_plan(newstate, tasks.drop(1), plan + [task1], depth + 1, verbose)
       return solution unless solution == false
     end
   end
@@ -119,9 +119,7 @@ def seek_plan(state, tasks, plan, depth, verbose=0)
       puts "depth #{depth} new tasks: #{subtasks}" if verbose > 2
 
       unless subtasks == false
-        # TODO: it should be something like "subtasks << tasks.drop(1)" 
-        # instead of "subtasks" maybe
-        solution = seek_plan(state, subtasks, plan, depth + 1, verbose)
+        solution = seek_plan(state, subtasks + tasks.drop(1), plan, depth + 1, verbose)
         return solution unless solution == false
       end
     end
