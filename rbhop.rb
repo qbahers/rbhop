@@ -52,17 +52,23 @@ end
 ############################################################
 # Commands to tell Pyhop what the operators and methods are
 
-$operators = {}
-$methods = {}
+module Task
+  class << self
+    attr_accessor :operators, :methods
+  end
+end
+
+Task.operators = {}
+Task.methods = {}
 
 def declare_operators(*op_list)
-  op_list.map { |op| $operators[op] = method(op.to_sym) }
-  $operators
+  op_list.map { |op| Task.operators[op] = method(op.to_sym) }
+  Task.operators
 end
 
 def declare_methods(task_name, *method_list)
-  $methods[task_name] = method_list.map { |m| method(m.to_sym) }
-  $methods[task_name]
+  Task.methods[task_name] = method_list.map { |m| method(m.to_sym) }
+  Task.methods[task_name]
 end
 
 ############################################################
@@ -80,7 +86,6 @@ def rbhop(state, tasks, verbose=0)
 end
 
 def seek_plan(state, tasks, plan, depth, verbose=0)
-
   puts "depth #{depth} tasks #{tasks}" if verbose > 1
 
   if tasks == []
@@ -90,9 +95,9 @@ def seek_plan(state, tasks, plan, depth, verbose=0)
 
   task1 = tasks[0]
 
-  if $operators.key? task1[0]
+  if Task.operators.key? task1[0]
     puts "depth #{depth} action #{task1}" if verbose > 2
-    operator = $operators[task1[0]]
+    operator = Task.operators[task1[0]]
     newstate = operator.call(state.deep_clone, *task1.drop(1))
 
     if verbose > 2
@@ -106,9 +111,9 @@ def seek_plan(state, tasks, plan, depth, verbose=0)
     end
   end
 
-  if $methods.key? task1[0]
+  if Task.methods.key? task1[0]
     puts "depth #{depth} method instance #{task1}" if verbose > 2
-    relevant = $methods[task1[0]]
+    relevant = Task.methods[task1[0]]
     relevant.each do |method|
       subtasks = method.call(state, *task1.drop(1))
       puts "depth #{depth} new tasks: #{subtasks}" if verbose > 2
