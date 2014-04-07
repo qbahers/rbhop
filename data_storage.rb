@@ -9,5 +9,6 @@ store.transaction do
   store[:planning_domains] = 
     { travel: { 
         requirements: requirements, 
-        state_name: "StateTravel", params: [params] } }
+        state_name:   "StateTravel", 
+        params:       [params] } }
 end
