@@ -1,6 +1,6 @@
 # Simple Travel operators
 
-require_relative "rbhop"
+require_relative "../rbhop"
 
 def taxi_rate(dist)
   1.5 + 0.5 * dist

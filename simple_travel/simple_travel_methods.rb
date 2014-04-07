@@ -1,6 +1,6 @@
 # Simple Travel methods
 
-require_relative "rbhop"
+require_relative "../rbhop"
 
 def travel_by_foot(state, a, x, y)
   if state.dist[x][y] <= 2
