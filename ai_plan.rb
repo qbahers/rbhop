@@ -1,6 +1,6 @@
 require "yaml/store"
 
-require_relative "api_client"
+require_relative "api"
 require_relative "simple_travel/simple_travel"
 
 def sanitize(word)
@@ -29,7 +29,7 @@ def ai_plan(plain_text)
     requirements = domain["requirements"]
 
     requirements.each do |requirement|
-      value = get_last_value(requirement)
+      value = API.get_last_value(requirement)
       eval("$#{requirement} = #{value}")
     end
 
