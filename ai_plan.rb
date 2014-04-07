@@ -28,9 +28,8 @@ def ai_plan(plain_text)
   if domain
     requirements = domain["requirements"]
 
-    requirements.each do |requirement|
-      value = API.get_last_value(requirement)
-      eval("$#{requirement} = #{value}")
+    requirements.map! do |requirement|
+      API.get_last_value(requirement)
     end
 
     state_name = domain["state_name"]

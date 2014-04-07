@@ -4,7 +4,7 @@ require_relative "simple_travel_methods"
 class StateTravel < State
   attr_accessor :loc, :cash, :owe, :dist
 
-  def initialize(cash, dist)
+  def initialize(dist, cash)
     @name = "state1"
     @loc  = { "me" => "home" }
     @cash = { "me" => cash.to_i }
