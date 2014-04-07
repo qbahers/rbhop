@@ -1,17 +1,24 @@
+require "yaml/store"
+
 require_relative "api_client"
 require_relative "simple_travel/simple_travel"
-require_relative "planning_domains"
 
 def sanitize(word)
-  word.gsub(/[^0-9A-Za-z]/, '')
+  word.gsub(/[^0-9A-Za-z]/, "")
       .downcase
 end
 
 def find_domain(plain_text)
+  store = YAML::Store.new("data.yml")
+
+  planning_domains = store.transaction(true) do
+    store["planning_domains"]
+  end
+
   words = plain_text.split(" ")
   words.each do |word|
     s_word = sanitize(word)
-    return $planning_domains[s_word] if $planning_domains.key?(s_word)
+    return planning_domains[s_word] if planning_domains.key?(s_word)
   end
   false
 end
