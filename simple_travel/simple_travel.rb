@@ -7,8 +7,8 @@ class StateTravel < State
   def initialize(dist, cash)
     @name = "state1"
     @loc  = { "me" => "home" }
-    @cash = { "me" => cash.to_i }
+    @cash = { "me" => cash }
     @owe  = { "me" => 0 }
-    @dist = { "home" => { "park" => dist.to_i }, "park" => { "home" => dist.to_i } }
+    @dist = { "home" => { "park" => dist }, "park" => { "home" => dist } }
   end
 end

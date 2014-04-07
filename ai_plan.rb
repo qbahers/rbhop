@@ -16,6 +16,7 @@ def find_domain(plain_text)
   end
 
   words = plain_text.split(" ")
+
   words.each do |word|
     s_word = sanitize(word)
     return planning_domains[s_word] if planning_domains.key?(s_word)
@@ -25,6 +26,7 @@ end
 
 def ai_plan(plain_text)
   domain = find_domain(plain_text)
+
   if domain
     requirements = domain["requirements"]
 

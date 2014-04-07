@@ -7,7 +7,7 @@ module API
 
   def self.get_streams(tag)
     uri = URI("#{IOT_FRAMEWORK_URI}/streams/_search")
-    parsed_body = { "query" => { "term" => { "tags" => tag } } }
+    parsed_body = { query: { term: { tags: tag } } }
 
     req = Net::HTTP::Post.new(uri.path)
     req.body = parsed_body.to_json
