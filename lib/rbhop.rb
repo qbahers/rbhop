@@ -1,7 +1,9 @@
+$:.unshift File.dirname(__FILE__)
+
 require "yaml/store"
 
-require_relative "api"
-require_relative "simple_travel/simple_travel"
+require "rbhop/api"
+require "rbhop/simple_travel/simple_travel"
 
 def sanitize(word)
   word.gsub(/[^0-9A-Za-z]/, "")
@@ -9,7 +11,7 @@ def sanitize(word)
 end
 
 def find_domain(plain_text)
-  store = YAML::Store.new("data.yml")
+  store = YAML::Store.new("../lib/rbhop/data.yml")
 
   planning_domains = store.transaction(true) do
     store["planning_domains"]
