@@ -1,7 +1,10 @@
+$:.unshift File.dirname(__FILE__)
+
 require "yaml/store"
 
-require_relative "api"
-require_relative "simple_travel/simple_travel"
+require "rbhop/api"
+require "rbhop/version"
+require "rbhop/simple_travel/simple_travel"
 
 def sanitize(word)
   word.gsub(/[^0-9A-Za-z]/, "")
@@ -9,7 +12,7 @@ def sanitize(word)
 end
 
 def find_domain(plain_text)
-  store = YAML::Store.new("data.yml")
+  store = YAML::Store.new("../lib/rbhop/data.yml")
 
   planning_domains = store.transaction(true) do
     store["planning_domains"]
@@ -24,34 +27,24 @@ def find_domain(plain_text)
   false
 end
 
-def ai_plan(plain_text)
+def rbhop(plain_text)
   domain = find_domain(plain_text)
 
   if domain
     requirements = domain["requirements"]
 
     requirements.map! do |requirement|
-      API.get_last_value(requirement)
+      value = API.get_last_value(requirement)
+      puts "#{requirement}: #{value}"
+      value
     end
 
     state_name = domain["state_name"]
     state = Kernel.const_get(state_name).new(*requirements)
     params = domain["params"]
-    plan = rbhop(state, params)
+    plan = ai_plan(state, params)
   else
     "(._.?)"
   end
 end
-
-# Test
-plan = ai_plan("travel")
-p plan
-plan = ai_plan("Tell me how to travel from home to the park")
-p plan
-plan = ai_plan("How to travel?")
-p plan
-plan = ai_plan("Travel")
-p plan
-plan = ai_plan("Hej")
-p plan
 

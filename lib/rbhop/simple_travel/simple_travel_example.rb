@@ -1,3 +1,4 @@
+=begin
 # The "travel from home to the park" example
 
 require_relative "simple_travel_operators"
@@ -30,4 +31,5 @@ rbhop(state, [["travel", "me", "home", "park"]], verbose=2)
 
 puts "", "- If verbose=3, Rbhop also prints the intermediate states:"
 rbhop(state, [["travel", "me", "home", "park"]], verbose=3)
+=end
 

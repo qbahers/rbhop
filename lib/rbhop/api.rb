@@ -42,7 +42,9 @@ module API
       # OK
       body = res.body
       parsed_body = JSON.parse(body)
-      last_data_point = parsed_body["data"][0]["value"]
+      data_points = parsed_body["data"]
+      sorted_data_points = data_points.sort_by { |hsh| hsh["timestamp"] }
+      last_data_point = sorted_data_points.last["value"]
     else
       res.value
     end
