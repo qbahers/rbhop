@@ -9,14 +9,14 @@ if ARGV.size > 0 && (ARGV[0] == "-v" || ARGV[0] == "--version")
   puts Rbhop::VERSION
 else
   # Test
-  plan = ai_plan("travel")
+  plan = rbhop("travel")
   p plan
-  plan = ai_plan("Tell me how to travel from home to the park")
+  plan = rbhop("Tell me how to travel from home to the park")
   p plan
-  plan = ai_plan("How to travel?")
+  plan = rbhop("How to travel?")
   p plan
-  plan = ai_plan("Travel")
+  plan = rbhop("Travel")
   p plan
-  plan = ai_plan("Hej")
+  plan = rbhop("Hej")
   p plan
 end

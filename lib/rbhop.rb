@@ -27,7 +27,7 @@ def find_domain(plain_text)
   false
 end
 
-def ai_plan(plain_text)
+def rbhop(plain_text)
   domain = find_domain(plain_text)
 
   if domain
@@ -40,7 +40,7 @@ def ai_plan(plain_text)
     state_name = domain["state_name"]
     state = Kernel.const_get(state_name).new(*requirements)
     params = domain["params"]
-    plan = rbhop(state, params)
+    plan = ai_plan(state, params)
   else
     "(._.?)"
   end

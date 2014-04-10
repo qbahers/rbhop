@@ -74,9 +74,9 @@ end
 ############################################################
 # The actual planner
 
-def rbhop(state, tasks, verbose=0)
+def ai_plan(state, tasks, verbose=0)
   if verbose > 0
-    puts "** rbhop, verbose = #{verbose}: **"
+    puts "** ai_plan, verbose = #{verbose}: **"
     puts "state = #{state.name}"
     puts "tasks = #{tasks}"
   end
