@@ -34,7 +34,9 @@ def rbhop(plain_text)
     requirements = domain["requirements"]
 
     requirements.map! do |requirement|
-      API.get_last_value(requirement)
+      value = API.get_last_value(requirement)
+      puts "#{requirement}: #{value}"
+      value
     end
 
     state_name = domain["state_name"]
