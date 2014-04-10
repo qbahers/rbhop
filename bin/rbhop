@@ -4,3 +4,19 @@
 $:.unshift File.join(File.dirname(__FILE__), *%w{ .. lib })
 
 require 'rbhop'
+
+if ARGV.size > 0 && (ARGV[0] == "-v" || ARGV[0] == "--version")
+  puts Rbhop::VERSION
+else
+  # Test
+  plan = ai_plan("travel")
+  p plan
+  plan = ai_plan("Tell me how to travel from home to the park")
+  p plan
+  plan = ai_plan("How to travel?")
+  p plan
+  plan = ai_plan("Travel")
+  p plan
+  plan = ai_plan("Hej")
+  p plan
+end

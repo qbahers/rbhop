@@ -3,6 +3,7 @@ $:.unshift File.dirname(__FILE__)
 require "yaml/store"
 
 require "rbhop/api"
+require "rbhop/version"
 require "rbhop/simple_travel/simple_travel"
 
 def sanitize(word)
@@ -44,16 +45,4 @@ def ai_plan(plain_text)
     "(._.?)"
   end
 end
-
-# Test
-plan = ai_plan("travel")
-p plan
-plan = ai_plan("Tell me how to travel from home to the park")
-p plan
-plan = ai_plan("How to travel?")
-p plan
-plan = ai_plan("Travel")
-p plan
-plan = ai_plan("Hej")
-p plan
 
