@@ -10,13 +10,18 @@ end
 Task.operators = {}
 Task.methods = {}
 
-def declare_operators(*op_list)
-  op_list.map { |op| Task.operators[op] = method(op.to_sym) }
+def declare_operators(task_name, *op_list)
+  op_list.map do |op| 
+    Task.operators[op] = 
+      Rbhop::module_eval(task_name.capitalize).method(op.to_sym)
+  end
   Task.operators
 end
 
 def declare_methods(task_name, *method_list)
-  Task.methods[task_name] = method_list.map { |m| method(m.to_sym) }
+  Task.methods[task_name] = method_list.map do|m| 
+    Rbhop::module_eval(task_name.capitalize).method(m.to_sym)
+  end
   Task.methods[task_name]
 end
 

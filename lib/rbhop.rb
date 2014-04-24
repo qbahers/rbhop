@@ -41,7 +41,6 @@ module Rbhop
       end
 
       state_name = domain["state_name"]
-      p state_name
       state = Kernel.const_get("Rbhop")
                     .const_get(state_name).new(*requirements)
       params = domain["params"]
