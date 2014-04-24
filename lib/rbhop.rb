@@ -41,7 +41,9 @@ module Rbhop
       end
 
       state_name = domain["state_name"]
-      state = Kernel.const_get(state_name).new(*requirements)
+      p state_name
+      state = Kernel.const_get("Rbhop")
+                    .const_get(state_name).new(*requirements)
       params = domain["params"]
       plan = ai_plan(state, params)
     else
