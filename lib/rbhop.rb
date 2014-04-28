@@ -5,6 +5,7 @@ require "yaml/store"
 require "rbhop/api"
 require "rbhop/ai_plan"
 require "rbhop/version"
+require "rbhop/store_data"
 require "rbhop/simple_travel/simple_travel"
 
 module Rbhop
