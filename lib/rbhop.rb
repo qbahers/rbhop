@@ -3,6 +3,7 @@ $:.unshift File.dirname(__FILE__)
 require "yaml/store"
 
 require "rbhop/api"
+require "rbhop/ai_plan"
 require "rbhop/version"
 require "rbhop/simple_travel/simple_travel"
 
@@ -44,7 +45,7 @@ module Rbhop
       state = Kernel.const_get("Rbhop")
                     .const_get(state_name).new(*requirements)
       params = domain["params"]
-      plan = ai_plan(state, params)
+      plan = Rbhop.ai_plan(state, params)
     else
       "(._.?)"
     end

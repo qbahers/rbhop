@@ -1,6 +1,6 @@
 # Simple Travel methods
 
-require_relative "../ai_plan"
+require_relative "../actions"
 
 module Rbhop
   module Travel
@@ -18,6 +18,6 @@ module Rbhop
       false
     end
   end
-end
 
-declare_methods("travel", "travel_by_foot", "travel_by_taxi")
+  declare_methods("travel", "travel_by_foot", "travel_by_taxi")
+end

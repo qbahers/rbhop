@@ -1,6 +1,6 @@
 # Simple Travel operators
 
-require_relative "../ai_plan"
+require_relative "../actions"
 
 module Rbhop
   module Travel
@@ -43,7 +43,8 @@ module Rbhop
       end
     end
   end
+
+  declare_operators("travel", "walk", "call_taxi", "ride_taxi", "pay_driver")
 end
 
-declare_operators("travel", "walk", "call_taxi", "ride_taxi", "pay_driver")
 
